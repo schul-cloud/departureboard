@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Schul-Cloud Departure Board</title>
+  <link rel="stylesheet" href="board.css" />
+  <meta charset="utf-8" />
+  <script src="jquery.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var socket;
+      var container = document.getElementById('board');
+
+      $('body').click(function(){
+          container.webkitRequestFullScreen();
+      });
+
+      function initWebsocket() {
+        socket = new WebSocket("ws://digi.schul.tech")
+
+        socket.onopen = function() {
+          console.log('Connection open');
+        };
+
+        socket.onclose = function() {
+          console.log('Connection closed');
+
+          setTimeout((function() {
+            console.log('Trying to reconnect.');
+            initWebsocket();
+          }), 2000);
+        };
+
+        socket.onmessage = function(msg) {
+
+          data = JSON.parse(msg.data);
+
+          if (data.action == 'checkin') {
+            updateCheckin(data.partner);
+          }
+          if (data.action == 'launch') {
+            board.setValue(statuslist);
+          }
+          // sth
+        }
+      }
+
+
+      function sendMessage(message) {
+        socket.send(message);
+      }
+
+      window.sendMessage = sendMessage;
+
+      initWebsocket();
+
+      function updateCheckin(partnerid) {
+        //todo find partner in array and update
+        partners = $.map(partners, function(val, i) {
+          // Do something
+          if (val.id == partnerid) {
+
+            val.status = true;
+            return val;
+          } else {
+            return val;
+          }
+        });
+        console.log(partners);
+        updateInitialState();
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div id="board"></div>
+  <script src="board.js"></script>
+  <script>
+    var partners = [{
+        id: 'bmbf',
+        name: 'BMBF',
+        status: false
+      },
+      {
+        id: 'mintec',
+        name: 'MINT-EC',
+        status: false
+      },
+      {
+        id: 'hpi',
+        name: 'HPI',
+        status: false
+      }
+    ];
+
+    var statuslist = [
+      [true, 'Schul-Cloud'],
+      [false, 'Status     Ort                    Schule                        '],
+      [false, ''],
+      [true, 'online     Worms (RLP)            Gauß-Gymnasium    '],
+      [true, 'online     Grünstadt (RLP)        Leininger-Gymnasium   '],
+      [false, 'boarding   Saarburg (RLP)         Gymnasium Saarburg  '],
+      [false, 'boarding   Kaiserslautern (RLP)   Hohenstaufen-Gymnasium  '],
+      [false, 'boarding   Mainz (RLP)            Otto-Schott-Gymnasium '],
+      [false, 'boarding   Schwäbisch Gmünd (BW)  Landesgymnasium für Hochbegabte    '],
+      [false, 'boarding   Sindelfingen (BW)      Stiftsgymnasium    '],
+      [false, 'boarding   Bamberg (Bayern)       Dientzenhofer-Gymnasium    '],
+      [false, 'boarding   Dilligen (Bayern)      Johann-Michael-Sailer-Gymnasium'],
+      [false, 'boarding   Berlin (Berlin)        Heinrich-Hertz-Gymnasium    '],
+      [false, 'boarding   Ludwigsfelde (Brandb.) Marie-Curie-Gymnasium    '],
+      [false, 'boarding   Frankfurt/Main (Hes.)  Elisabethenschule    '],
+      [false, 'boarding   Marburg (Hes.)         Martin-Luther-Schule    '],
+      [false, 'boarding   Kassel (Hes.)          Georg-Christoph-Lichtenberg-Schule    '],
+      [false, 'boarding   Marburg (Hes.)         Martin-Luther-Schule    '],
+      [false, 'boarding   Neustrelitz (MVP)      Gymnasium Carolinum    '],
+      [false, 'boarding   Meppen (NI)            Gymnasium Gymnasium Marianum    '],
+      [false, 'boarding   Osnabrück (NI)         Ursulaschule    '],
+      [false, 'boarding   Hannover (NI)          Schillerschule   '],
+      [false, 'boarding   Braunschweig (NI)      Wilhelm-Gymnasium    '],
+      [false, 'boarding   Wolfsburg (NI)         Ratsgymnasium    '],
+      [false, 'boarding   Arnsberg (NRW)         Franz-Stock-Gymnasium    '],
+      [false, 'boarding   Münster (NRW)          Wilhelm-Hittorf-Gymnasium'],
+      [false, 'boarding   Lebach (Saarland)      Johannes-Kepler-Gymnasium    '],
+      [false, 'boarding   Leipzig (Sachsen)      Wilhelm-Ostwald-Schule Gymnasium   '],
+      [false, 'boarding   Naumburg (Sachsen-An.) Landesschule Pforta    '],
+      [false, 'boarding   Neumünster (SH)        Klaus-Groth-Schule    ']
+
+
+
+    ];
+
+    var initialState = [
+      [true, 'Schul-Cloud'],
+      [false, ''],
+      [false, 'Status               Partner'],
+      [false, '']
+    ];
+
+    function updateInitialState() {
+      var counter = 0;
+      var state = [];
+      state = Object.assign([], initialState);
+      partners.forEach(function(entry) {
+        if (entry.status === false) {
+          text = 'Please check in      ' + entry.name;
+        } else {
+          text = 'Checked In           ' + entry.name;
+          counter = counter + 1;
+        }
+
+        state.push([entry.status, text]);
+      });
+      if (counter > 2) {
+        state.push([false, ''], [false, 'Schul-Cloud bereit zum Start']);
+      }
+      board.setValue(state);
+    }
+    var board = new DepartureBoard(document.getElementById('board'), {
+      rowCount: 30,
+      letterCount: 70
+    });
+    updateInitialState();
+
+
+    // window.setTimeout (function () {
+    //  	board.setValue ('19:42 Sheffield');
+    // }, 12000);
+  </script>
+  <button onclick="
+    board.setValue (statuslist);">Update</button>
+  <button onclick="
+    container.webkitRequestFullScreen()">FullScreen</button>
+</body>
+
+</html>

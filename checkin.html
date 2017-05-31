@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Schul-Cloud Check-In</title>
+  <link rel="stylesheet" href="board.css" />
+  <script src="jquery.js"></script>
+  <meta charset="utf-8" />
+  <script type="text/javascript">
+    var checkincount = 0;
+
+
+      $(document).ready(function() {
+        var socket;
+
+        function initWebsocket() {
+          socket = new WebSocket("ws://digi.schul.tech")
+
+          socket.onopen = function() {
+            console.log('Connection open');
+          };
+
+          socket.onclose = function() {
+            console.log('Connection closed');
+
+            setTimeout((function() {
+              console.log('Trying to reconnect.');
+              initWebsocket();
+            }), 2000);
+          };
+
+          socket.onmessage = function(msg) {
+            console.log('Message received');
+            console.log(msg);
+            // sth
+          }
+        }
+
+
+        function sendMessage(message) {
+          socket.send(message);
+        }
+
+        window.sendMessage = sendMessage;
+
+        initWebsocket();
+
+      });
+
+
+
+
+    $(document).ready(function() {
+        $('button.launch').click(function(ev) {
+            $(ev.target).addClass('checkedin');
+            sendMessage('{"action": "launch"}');
+        });
+      $('button.checkin').click(function(ev) {
+        console.log(checkincount);
+        sendMessage('{"action": "checkin", "partner": "'+$(ev.target).data('id')+'"}');
+        if ($(ev.target).hasClass('checkedin') == false) {
+          checkincount = checkincount+1;
+        }
+        $(ev.target).addClass('checkedin');
+        if (checkincount > 2) {
+          $('#partner_checkin').hide();
+          $('#launch').show();
+        }
+
+      });
+      $('#launch').hide();
+    });
+  </script>
+</head>
+
+<body id="checkin">
+
+  <center id="partner_checkin">
+    <h1>Schul-Cloud Check-In</h1>
+    <button class="checkin" data-id="bmbf">BMBF</button><br /><br />
+    <button class="checkin" data-id="mintec">MINT-EC</button><br /><br />
+    <button class="checkin" data-id="hpi">HPI</button>
+  </center>
+  <center id="launch">
+    <h1>Schul-Cloud Launch</h1>
+    <button class="launch">Schul-Cloud starten</button><br />
+  </center>
+</body>
