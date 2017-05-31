@@ -14,7 +14,7 @@
         var socket;
 
         function initWebsocket() {
-          socket = new WebSocket("ws://digi.schul.tech")
+          socket = new WebSocket("wss://digi.schul.tech")
 
           socket.onopen = function() {
             console.log('Connection open');
