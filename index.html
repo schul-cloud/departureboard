@@ -32,14 +32,23 @@
         };
 
         socket.onmessage = function(msg) {
-
           data = JSON.parse(msg.data);
+          currentState = data.action;
 
           if (data.action == 'checkin') {
             updateCheckin(data.partner);
           }
           if (data.action == 'launch') {
+            console.log(currentState);
             board.setValue(statuslist);
+            if (data.action == "launch"){
+              status = "online  ";
+              ledstatus = true;
+              setTimeout(function(){
+                console.log('timeout');
+                board.setValue(buildStatuslist());
+              }, 10000)
+            }
           }
           // sth
         }
@@ -93,43 +102,44 @@
         status: false
       }
     ];
-
-    var statuslist = [
-      [true, 'Schul-Cloud'],
-      [false, 'Status     Ort                    Schule                        '],
-      [false, ''],
-      [true, 'online     Worms (RLP)            Gauß-Gymnasium    '],
-      [true, 'online     Grünstadt (RLP)        Leininger-Gymnasium   '],
-      [false, 'boarding   Saarburg (RLP)         Gymnasium Saarburg  '],
-      [false, 'boarding   Kaiserslautern (RLP)   Hohenstaufen-Gymnasium  '],
-      [false, 'boarding   Mainz (RLP)            Otto-Schott-Gymnasium '],
-      [false, 'boarding   Schwäbisch Gmünd (BW)  Landesgymnasium für Hochbegabte    '],
-      [false, 'boarding   Sindelfingen (BW)      Stiftsgymnasium    '],
-      [false, 'boarding   Bamberg (Bayern)       Dientzenhofer-Gymnasium    '],
-      [false, 'boarding   Dilligen (Bayern)      Johann-Michael-Sailer-Gymnasium'],
-      [false, 'boarding   Berlin (Berlin)        Heinrich-Hertz-Gymnasium    '],
-      [false, 'boarding   Ludwigsfelde (Brandb.) Marie-Curie-Gymnasium    '],
-      [false, 'boarding   Frankfurt/Main (Hes.)  Elisabethenschule    '],
-      [false, 'boarding   Marburg (Hes.)         Martin-Luther-Schule    '],
-      [false, 'boarding   Kassel (Hes.)          Georg-Christoph-Lichtenberg-Schule    '],
-      [false, 'boarding   Marburg (Hes.)         Martin-Luther-Schule    '],
-      [false, 'boarding   Neustrelitz (MVP)      Gymnasium Carolinum    '],
-      [false, 'boarding   Meppen (NI)            Gymnasium Gymnasium Marianum    '],
-      [false, 'boarding   Osnabrück (NI)         Ursulaschule    '],
-      [false, 'boarding   Hannover (NI)          Schillerschule   '],
-      [false, 'boarding   Braunschweig (NI)      Wilhelm-Gymnasium    '],
-      [false, 'boarding   Wolfsburg (NI)         Ratsgymnasium    '],
-      [false, 'boarding   Arnsberg (NRW)         Franz-Stock-Gymnasium    '],
-      [false, 'boarding   Münster (NRW)          Wilhelm-Hittorf-Gymnasium'],
-      [false, 'boarding   Lebach (Saarland)      Johannes-Kepler-Gymnasium    '],
-      [false, 'boarding   Leipzig (Sachsen)      Wilhelm-Ostwald-Schule Gymnasium   '],
-      [false, 'boarding   Naumburg (Sachsen-An.) Landesschule Pforta    '],
-      [false, 'boarding   Neumünster (SH)        Klaus-Groth-Schule    ']
-
-
-
-    ];
-
+    var status = "ready   ";
+    var currentState = '';
+    var ledstatus = false;
+    var statuslist = buildStatuslist();
+    function buildStatuslist(){
+      statuslist = [
+        [true, 'Schul-Cloud.org'],
+        [false, 'Status     Ort                    Schule                        '],
+        [false, ''],
+        [true, 'online     Worms (RLP)            Gauß-Gymnasium    '],
+        [true, 'online     Grünstadt (RLP)        Leininger-Gymnasium   '],
+        [ledstatus, status+'   Arnsberg (NRW)         Franz-Stock-Gymnasium    '],
+        [ledstatus, status+'   Bamberg (Bayern)       Dientzenhofer-Gymnasium    '],
+        [ledstatus, status+'   Berlin (Berlin)        Heinrich-Hertz-Gymnasium    '],
+        [ledstatus, status+'   Braunschweig (NI)      Wilhelm-Gymnasium    '],
+        [ledstatus, status+'   Dilligen (Bayern)      Johann-Michael-Sailer-Gymnasium'],
+        [ledstatus, status+'   Frankfurt/Main (Hes.)  Elisabethenschule    '],
+        [ledstatus, status+'   Hannover (NI)          Schillerschule   '],
+        [ledstatus, status+'   Kaiserslautern (RLP)   Hohenstaufen-Gymnasium  '],
+        [ledstatus, status+'   Kassel (Hes.)          Georg-Christoph-Lichtenberg-Schule    '],
+        [ledstatus, status+'   Lebach (Saarland)      Johannes-Kepler-Gymnasium    '],
+        [ledstatus, status+'   Leipzig (Sachsen)      Wilhelm-Ostwald-Schule Gymnasium   '],
+        [ledstatus, status+'   Ludwigsfelde (Brandb.) Marie-Curie-Gymnasium    '],
+        [ledstatus, status+'   Mainz (RLP)            Otto-Schott-Gymnasium '],
+        [ledstatus, status+'   Marburg (Hes.)         Martin-Luther-Schule    '],
+        [ledstatus, status+'   Meppen (NI)            Gymnasium Gymnasium Marianum    '],
+        [ledstatus, status+'   Münster (NRW)          Wilhelm-Hittorf-Gymnasium'],
+        [ledstatus, status+'   Naumburg (Sachsen-An.) Landesschule Pforta    '],
+        [ledstatus, status+'   Neumünster (SH)        Klaus-Groth-Schule    ']
+        [ledstatus, status+'   Neustrelitz (MVP)      Gymnasium Carolinum    '],
+        [ledstatus, status+'   Osnabrück (NI)         Ursulaschule    '],
+        [ledstatus, status+'   Saarburg (RLP)         Gymnasium Saarburg  '],
+        [ledstatus, status+'   Schwäbisch Gmünd (BW)  Landesgymnasium für Hochbegabte    '],
+        [ledstatus, status+'   Sindelfingen (BW)      Stiftsgymnasium    '],
+        [ledstatus, status+'   Wolfsburg (NI)         Ratsgymnasium    ']
+      ];
+      return statuslist;
+    }
     var initialState = [
       [true, 'Schul-Cloud'],
       [false, ''],
@@ -154,7 +164,10 @@
       if (counter > 2) {
         state.push([false, ''], [false, 'Schul-Cloud bereit zum Start']);
       }
+
       board.setValue(state);
+
+
     }
     var board = new DepartureBoard(document.getElementById('board'), {
       rowCount: 30,
