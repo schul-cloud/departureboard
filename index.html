@@ -39,10 +39,9 @@
             updateCheckin(data.partner);
           }
           if (data.action == 'launch') {
-            console.log(currentState);
             board.setValue(statuslist);
             if (data.action == "launch"){
-              status = "online  ";
+              status = "online";
               ledstatus = true;
               setTimeout(function(){
                 console.log('timeout');
@@ -102,17 +101,17 @@
         status: false
       }
     ];
-    var status = "ready   ";
+    var status = "ready ";
     var currentState = '';
     var ledstatus = false;
     var statuslist = buildStatuslist();
     function buildStatuslist(){
       statuslist = [
         [true, 'Schul-Cloud.org'],
-        [false, 'Status     Ort                    Schule                        '],
         [false, ''],
-        [true, 'online     Worms (RLP)            Gauß-Gymnasium    '],
-        [true, 'online     Grünstadt (RLP)        Leininger-Gymnasium   '],
+        [false, 'Status   Ort                    Schule                        '],
+        [true,  'online   Worms (RLP)            Gauß-Gymnasium    '],
+        [true,  'online   Grünstadt (RLP)        Leininger-Gymnasium   '],
         [ledstatus, status+'   Arnsberg (NRW)         Franz-Stock-Gymnasium    '],
         [ledstatus, status+'   Bamberg (Bayern)       Dientzenhofer-Gymnasium    '],
         [ledstatus, status+'   Berlin (Berlin)        Heinrich-Hertz-Gymnasium    '],
@@ -130,7 +129,7 @@
         [ledstatus, status+'   Meppen (NI)            Gymnasium Gymnasium Marianum    '],
         [ledstatus, status+'   Münster (NRW)          Wilhelm-Hittorf-Gymnasium'],
         [ledstatus, status+'   Naumburg (Sachsen-An.) Landesschule Pforta    '],
-        [ledstatus, status+'   Neumünster (SH)        Klaus-Groth-Schule    ']
+        [ledstatus, status+'   Neumünster (SH)        Klaus-Groth-Schule    '],
         [ledstatus, status+'   Neustrelitz (MVP)      Gymnasium Carolinum    '],
         [ledstatus, status+'   Osnabrück (NI)         Ursulaschule    '],
         [ledstatus, status+'   Saarburg (RLP)         Gymnasium Saarburg  '],
@@ -171,7 +170,7 @@
     }
     var board = new DepartureBoard(document.getElementById('board'), {
       rowCount: 30,
-      letterCount: 70
+      letterCount: 67
     });
     updateInitialState();
 

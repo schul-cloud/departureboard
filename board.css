@@ -14,7 +14,7 @@ background-color: #e6e2e2;
   color: #b10438;
 }
 #checkin button{
-  height: 100px;
+  height: 150px;
   width:300px;
   font-size: 20px;
 }
@@ -22,6 +22,16 @@ background-color: #e6e2e2;
 #checkin button.checkedin{
   background-color: green;
   color: white;
+}
+
+#checkin button.launch{
+  background-color: green;
+  color: white;
+  width: 750px;
+  height: 750px;
+  border-radius: 50%;
+  font-size: 100px;
+  box-shadow: 5px 8px 10px 0px rgba(0, 0, 0, 0), inset 0px 4px 5px 5px white, inset 0px -5px 5px 5px rgba(204,198,197,.8);
 }
 .leds {
   width: 50px;
