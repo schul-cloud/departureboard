@@ -23,9 +23,11 @@ background-color: #e6e2e2;
   background-color: green;
   color: white;
 }
-
+#checkin button.launch.on{
+  background-color: red;
+}
 #checkin button.launch{
-  background-color: green;
+  background-color: #b10438;
   color: white;
   width: 750px;
   height: 750px;
