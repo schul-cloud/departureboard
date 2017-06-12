@@ -57,6 +57,7 @@
         $('button.launch').click(function(ev) {
             $(ev.target).addClass('checkedin');
             sendMessage('{"action": "launch"}');
+            $('#launch button').addClass('on');
         });
       $('button.checkin').click(function(ev) {
         console.log(checkincount);
@@ -68,7 +69,7 @@
         if (checkincount > 2) {
           $('#partner_checkin').hide();
           $('#launch').show();
-          $('#launch button').addClass('on');
+         
         }
 
       });
